@@ -1,0 +1,78 @@
+import numpy as np
+class MD5:
+    def __init__(self):
+        filePath = input("Enter File path\n")
+        try:
+            file = open(filePath,encoding='utf8')
+            data = file.read()
+            binary = self.strTobinary(data)
+            paddedBinary = self.AddPadding(binary)
+            LengthPaddedBinary = self.addLengthOfInput(len(data),paddedBinary)
+            # print(len(LengthPaddedBinary),len(LengthPaddedBinary)/512)
+            size = 512
+            blocks = []
+            for block in range(len(LengthPaddedBinary)//size):
+                blocks.append(512*(block+1))
+            print(blocks)
+            self.initliazeBuffer()
+            self.processing(blocks,LengthPaddedBinary)
+
+        except ValueError as e:
+            print(e)
+    def processing(self,blocks,data):
+            for block in blocks:
+                subblocksIndexes = self.subblocks(block)
+                prev = 0
+                for index in subblocksIndexes:
+                    print(data[prev:index+1],end="--")
+                    prev = index+1
+                input()
+    def strTobinary(self,text):
+        binary = ''
+        for c in text:
+            binary+=format(ord(c),'b') +' '
+        """"
+        binary = ' '.join(format(ord(c),'b') for c in text)
+        """
+        return binary
+    def AddPadding(self,binary):
+        paddedBinary = ''
+        length = len(binary)
+        # print(len(bin(length)))
+        input()
+        for n in range(1,10000):
+            # print((512*n)-64)
+            if (512*n)-64 == length:
+                return binary
+            elif (512*n)-64 >= length:
+                # print((512*n)-64,length)
+                paddedBinary+= '1'+('0'*((512*n)-64-length-1))
+                return binary+paddedBinary
+        return
+    def addLengthOfInput(self,length,data):
+        bits=''
+        for i in range(64):
+            bits=str(length%2)+bits
+            length//=2
+        return data +bits
+    def subblocks(self,block):
+        subblocks=[]
+        indexes = 31
+        for block in range(16):
+            subblocks.append(indexes)
+            indexes+=32
+        print(subblocks)
+        return subblocks
+
+    def initliazeBuffer(self):
+        A = '01234567'
+        B = '89abcdef'
+        C = 'fedcba98'
+        D = '76543210'
+        print(A,B,C,D)   
+        return A,B,C,D
+    
+
+
+MD5()
+        
